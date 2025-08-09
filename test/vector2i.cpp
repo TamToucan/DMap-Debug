@@ -28,9 +28,9 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "vector2i.hpp"
+#include "Vector2i.hpp"
 
-#include "vector2.hpp"
+#include "Vector2.hpp"
 
 namespace godot {
 
