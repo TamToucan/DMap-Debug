@@ -82,7 +82,7 @@ MathStuff::Grid2D<uint32_t> makeEdgeGrid(const std::vector<GridType::Edge> edges
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 SparseGraph buildSparseGraph(const std::vector<GridType::Point>& baseNodes, const std::vector<GridType::Edge>& baseEdges,
-    const GridType::Grid& infoGrid)
+    const GridType::Grid& infoGrid, const std::vector<GridToGraph::AbstractLevel>& abstractLevels)
 {
     SparseGraph g;
     const int numNodes = baseNodes.size();
@@ -114,6 +114,20 @@ SparseGraph buildSparseGraph(const std::vector<GridType::Point>& baseNodes, cons
     }
 
     g.edgeGrid = makeEdgeGrid(baseEdges, infoGrid);
+
+	if (!abstractLevels.empty()) {
+		const auto& topLevel = abstractLevels.back();
+		for (const auto& abNode : topLevel.abstractNodes) {
+			g.abstractBaseNodes.insert(g.abstractBaseNodes.end(), abNode.baseNodes.begin(), abNode.baseNodes.end());
+		}
+		for (const auto& zone : topLevel.zones) {
+			g.abstractBaseEdges.insert(g.abstractBaseEdges.end(), zone.baseEdgeIdxs.begin(), zone.baseEdgeIdxs.end());
+		}
+		std::sort(g.abstractBaseNodes.begin(), g.abstractBaseNodes.end());
+		g.abstractBaseNodes.erase(std::unique(g.abstractBaseNodes.begin(), g.abstractBaseNodes.end()), g.abstractBaseNodes.end());
+		std::sort(g.abstractBaseEdges.begin(), g.abstractBaseEdges.end());
+		g.abstractBaseEdges.erase(std::unique(g.abstractBaseEdges.begin(), g.abstractBaseEdges.end()), g.abstractBaseEdges.end());
+	}
 
     std::cerr << "EDGE GRID" << std::endl;
     std::cerr << "     ";

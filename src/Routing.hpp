@@ -6,6 +6,8 @@
 #include "GridTypes.hpp"
 #include "Grid2D.h"
 
+#include "GridToGraph.hpp"
+
 namespace Routing {
 
 	// Use to store supset of base nodes/edges in format that can be used for routing
@@ -24,7 +26,8 @@ struct SparseGraph {
 
 SparseGraph buildSparseGraph(const std::vector<GridType::Point>& baseNodes,
 	const std::vector<GridType::Edge>& baseEdges,
-    const GridType::Grid& infoGrid);
+	const GridType::Grid& infoGrid,
+	const std::vector<GridToGraph::AbstractLevel>& abstractLevels);
 
 std::vector<int> findZonePath(const SparseGraph routingGraph,
 	const std::vector<int>& zoneBases,

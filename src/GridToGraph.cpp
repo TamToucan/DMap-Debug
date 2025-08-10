@@ -2132,7 +2132,7 @@ Graph makeGraph(const Grid& floorGrid)
     // Pre-compute routing graph info
     //
 	std::cout << "==ROUTING GRAPH" << std::endl;
-    graph.routingGraph = Routing::buildSparseGraph(graph.baseNodes, graph.baseEdges, graph.infoGrid);
+    graph.routingGraph = Routing::buildSparseGraph(graph.baseNodes, graph.baseEdges, graph.infoGrid, graph.abstractLevels);
 
 	std::cout << "==========GRAPH DONE" << std::endl;
 	debugDump(graph);
