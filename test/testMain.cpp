@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	Vector2 to(1830, 986);
 	Router::RouteCtx* ctx = new Router::RouteCtx();
 	ctx->type = -1;
-	int count = 100;
+	int count = 1000;
 	do {
 		float ang = Router::getAngle(graph, info, ctx, from, to, 0);
 		std::pair<float, float> mv = computeDirection(ang);
