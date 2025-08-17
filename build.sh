@@ -1,5 +1,7 @@
 #!/bin/bash
-cp test/GRID.txt .
+rm -fR tmp
+mkdir tmp
+cp test/GRID.txt tmp
 g++ -o testMain \
 -I test \
 -I src/ \
@@ -19,4 +21,5 @@ src/Router.cpp \
 src/Routing.cpp \
 src/WallDistanceGrid.cpp \
 lib/Stuff/TGA.cpp \
-lib/Algo/ZSThinning.cpp 
+lib/Algo/ZSThinning.cpp \
+-o tmp/testMain.exe
