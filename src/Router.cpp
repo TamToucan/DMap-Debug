@@ -259,23 +259,42 @@ GridType::Point getNextMove(const GridToGraph::Graph& graph, GridType::Point& so
 //////////////////////////////////////////////////////////////////////////////
 
 float getAngle(const GridToGraph::Graph& graph, const Router::Info& info,
-					RouteCtx* ctx, godot::Vector2 from, godot::Vector2 to, int type) {
-		GridType::Point fromPnt = { from.x / (info.mCellWidth * 8), from.y / (info.mCellHeight * 8) };
-		GridType::Point toPnt = { to.x / (info.mCellWidth * 8), to.y / (info.mCellHeight * 8) };
+                                        RouteCtx* ctx, godot::Vector2 from, godot::Vector2 to, int type) {
+                GridType::Point fromPnt = { from.x / (info.mCellWidth * 8), from.y / (info.mCellHeight * 8) };
+                GridType::Point toPnt = { to.x / (info.mCellWidth * 8), to.y / (info.mCellHeight * 8) };
+                std::cerr << "===GETMOVE: " << from.x << "," << to.x << "  cell: " << info.mCellWidth << "x" << info.mCellHeight << " => " << fromPnt.first << "," << fromPnt.second
+                        << " to:" << toPnt.first << "," << toPnt.second << std::endl;
 
-		if (ctx->type == type) {
-			if (fromPnt.first != ctx->next.first || fromPnt.second != ctx->next.second) {
-				return ctx->curDir;
-			}
-		}
+                std::cerr << "********** FROM:" << from.x << "," << from.y << " TO " << to.x << "," << to.y
+                        << "    " << fromPnt.first << "," << fromPnt.second << " TO " << toPnt.first << "," << toPnt.second << std::endl;
+                std::cerr << "CTX: F: " << ctx->from.first << "," << ctx->from.second
+                        << " C T: " << ctx->to.first << "," << ctx->to.second
+                        << " C N: " << ctx->next.first << "," << ctx->next.second
+                        << " C DIR: " << ctx->curDir
+                        << " FRM " << from.x << "," << from.y
+                        << " TO  " << to.x << "," << to.y
+                        << " FPNT: " << fromPnt.first << "," << fromPnt.second
+                        << " TPNT: " << toPnt.first << "," << toPnt.second
+                        << std::endl;
 
-		ctx->from = fromPnt;
-		ctx->to = toPnt;
-		ctx->type = type;
+                if (ctx->type == type) {
+                        if (fromPnt.first != ctx->next.first || fromPnt.second != ctx->next.second) {
+                                std::cerr << "===REUSED DIR " << ctx->curDir
+                                        << " frm: " << fromPnt.first << "," << fromPnt.second
+                                        << " nxt: " << ctx->next.first << "," << ctx->next.second << std::endl;
+                                return ctx->curDir;
+                        }
+                }
 
-		ctx->next = getNextMove(graph, fromPnt, toPnt);
-		ctx->curDir = computeAngle(ctx->next.first - ctx->from.first, ctx->next.second - ctx->from.second);
-		return ctx->curDir;
-	}
+                ctx->from = fromPnt;
+                ctx->to = toPnt;
+                ctx->type = type;
+
+                std::cerr << "===GETMOVE: " << fromPnt.first << "," << fromPnt.second << " TO " << toPnt.first << "," << toPnt.second << std::endl;
+                ctx->next = getNextMove(graph, fromPnt, toPnt);
+                ctx->curDir = computeAngle(ctx->next.first - ctx->from.first, ctx->next.second - ctx->from.second);
+                std::cerr << "##ANG from:" << fromPnt.first << "," << fromPnt.second << " NXT: " << ctx->next.first << "," << ctx->next.second << " = " << ctx->curDir << std::endl;
+                return ctx->curDir;
+        }
 }
 

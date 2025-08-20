@@ -266,29 +266,20 @@ std::vector<int> bidirectionalAStar(const SparseGraph& g, int sourceEdgeIdx, int
     if (meeting_node == -1) return {};
 
     std::vector<int> path;
-    std::unordered_set<int> visited_nodes;
+    // Reconstruct path from source to meeting node
     int current = meeting_node;
-
-    // Backward walk from meeting_node to source
-    while (current != -1 && backward_edge[current] != -1) {
-        if (visited_nodes.count(current)) {
-            return {}; // Return empty path on failure
-        }
-        visited_nodes.insert(current);
-
-        int edge_idx = backward_edge[current];
-        path.push_back(edge_idx);
-        const auto& edge = g.edgeFromTos[edge_idx];
+    while (current != -1 && forward_edge[current] != -1) {
+        path.push_back(forward_edge[current]);
+        const auto& edge = g.edgeFromTos[forward_edge[current]];
         current = (edge.first == current) ? edge.second : edge.first;
     }
     std::reverse(path.begin(), path.end());
 
-    // Forward walk from meeting_node to target
+    // Reconstruct path from meeting node to target
     current = meeting_node;
-    while (current != -1 && forward_edge[current] != -1) {
-        int edge_idx = forward_edge[current];
-        path.push_back(edge_idx);
-        const auto& edge = g.edgeFromTos[edge_idx];
+    while (current != -1 && backward_edge[current] != -1) {
+        path.push_back(backward_edge[current]);
+        const auto& edge = g.edgeFromTos[backward_edge[current]];
         current = (edge.first == current) ? edge.second : edge.first;
     }
 
