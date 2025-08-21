@@ -277,14 +277,6 @@ float getAngle(const GridToGraph::Graph& graph, const Router::Info& info,
                         << " TPNT: " << toPnt.first << "," << toPnt.second
                         << std::endl;
 
-                if (ctx->type == type) {
-                        if (fromPnt.first != ctx->next.first || fromPnt.second != ctx->next.second) {
-                                std::cerr << "===REUSED DIR " << ctx->curDir
-                                        << " frm: " << fromPnt.first << "," << fromPnt.second
-                                        << " nxt: " << ctx->next.first << "," << ctx->next.second << std::endl;
-                                return ctx->curDir;
-                        }
-                }
 
                 ctx->from = fromPnt;
                 ctx->to = toPnt;
