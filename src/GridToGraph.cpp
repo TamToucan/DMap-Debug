@@ -2133,6 +2133,22 @@ Graph makeGraph(const Grid& floorGrid)
 	std::cout << "==ROUTING GRAPH" << std::endl;
     graph.routingGraph = Routing::buildSparseGraph(graph.baseNodes, graph.baseEdges, graph.infoGrid);
 
+    // Populate routingGraph with top-level abstract graph info
+    //
+    if (!graph.abstractLevels.empty()) {
+        const auto& topLevel = graph.abstractLevels.back();
+        std::set<int> topLevelNodes;
+        std::set<int> topLevelEdges;
+
+        for (const auto& zoneInfo : topLevel.zones) {
+            topLevelNodes.insert(zoneInfo.baseNodeIdxs.begin(), zoneInfo.baseNodeIdxs.end());
+            topLevelEdges.insert(zoneInfo.baseEdgeIdxs.begin(), zoneInfo.baseEdgeIdxs.end());
+        }
+
+        graph.routingGraph.abstractBaseNodes.assign(topLevelNodes.begin(), topLevelNodes.end());
+        graph.routingGraph.abstractBaseEdges.assign(topLevelEdges.begin(), topLevelEdges.end());
+    }
+
 	std::cout << "==========GRAPH DONE" << std::endl;
 	debugDump(graph);
 	return graph;

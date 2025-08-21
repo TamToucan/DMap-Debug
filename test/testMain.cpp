@@ -5,6 +5,7 @@
 using namespace godot	;
 
 
+#include "GridTypes.hpp"
 #include "GridToGraph.hpp"
 #include "Router.hpp"
 
@@ -22,7 +23,7 @@ int main(int argc, char** argv)
 {
 	auto grid = GridToGraph::readGridFromFile("GRID.txt");
 	auto graph = GridToGraph::makeGraph(grid);
-
+	auto pathGrid(grid);
 	Router::Info info;
 	info.mCaveHeight = 32;
 	info.mCellWidth = 8;
@@ -32,15 +33,36 @@ int main(int argc, char** argv)
 	Router::RouteCtx* ctx = new Router::RouteCtx();
 	ctx->type = -1;
 	int count = 1000;
+	int mv = 1;
 	do {
+		GridType::Point fromPnt = { from.x / (info.mCellWidth * 8), from.y / (info.mCellHeight * 8) };
+		pathGrid[fromPnt.second][fromPnt.first] = 'x';
 		float ang = Router::getAngle(graph, info, ctx, from, to, 0);
 		std::pair<float, float> mv = computeDirection(ang);
 		from.x += mv.first * 23;
 		from.y += mv.second * 23;
 		std::cerr << "CTV MV " << mv.first << "," << mv.second
-			<< "  ang " << ang<< std::endl;
+			<< "  ang " << ang<< " cell: " << fromPnt.first << "," << fromPnt.second << std::endl;
 	} while ((ctx->from != ctx->to) && (--count > 0));
 	delete ctx;
-	std::cerr << "FlowField generated" << std::endl;
+
+	for (int row = 0; row < pathGrid.size(); ++row) {
+		for (int col = 0; col < pathGrid[0].size(); ++col) {
+			int v = pathGrid[row][col];
+			if (v == 0) {
+				std::cerr << "#";
+			}
+			else
+			if (v == 'x') {
+				std::cerr << "x";
+			}
+			else {
+				std::cerr << " ";
+			}
+		}
+		std::cerr << std::endl;
+	}
+
 	return 1;
 }
+
