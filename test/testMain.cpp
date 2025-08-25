@@ -44,6 +44,11 @@ int main(int argc, char** argv)
 		std::cerr << "CTV MV " << mv.first << "," << mv.second
 			<< "  ang " << ang<< " cell: " << fromPnt.first << "," << fromPnt.second << std::endl;
 	} while ((ctx->from != ctx->to) && (--count > 0));
+	std::cerr << "COUNT = " << count << std::endl;
+	if (count > 0) {
+		std::cerr << "##PATH FOUND##" << std::endl;
+	}
+
 	delete ctx;
 
 	for (int row = 0; row < pathGrid.size(); ++row) {
