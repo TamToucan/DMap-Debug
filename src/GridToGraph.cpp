@@ -372,6 +372,7 @@ void debugGridEdges(const Graph& graphs) { }
 void debugAbstractNodes(int pass, const AbstractLevel& ablv, const Graph& graph) { }
 void debugAbstractEdges(int pass, const AbstractLevel& ablv, const Graph& graph, const char* fname) { }
 void debugZones(int pass, const AbstractLevel& ablv, const Graph& graph) { }
+void debugZoneEdges(int pass, const AbstractLevel& ablv, const Graph& graph) { }
 void debugZoneBoundaries(int pass, const AbstractLevel& ablv) { }
 #else
 void writeGridToFile(const std::vector<std::vector<int>>& grid, const std::string& filename);
@@ -458,9 +459,9 @@ std::vector<Point> detectNodes(const Grid& grid)
 ///////////////////////////////////////////////////////////
 
 namespace {
+#ifndef NO_DEBUG
 	void makeTGA2(const char* name, const Grid& grid, unsigned int mask)
 	{
-#if 1
 		unsigned char* pPixel = new unsigned char[grid.size()*grid[0].size()*4];
 		unsigned char* pData = pPixel;
 		for (int y=grid.size()-1; y>= 0; --y) {
@@ -559,7 +560,6 @@ namespace {
 		bool ret = Stuff::TGA::saveToFile(name, grid[0].size(), grid.size(), 32, pPixel);
 		delete[] pPixel;
 		std::cerr << "XXXX " << name << " => " << (ret ? "saved" : "*FAILED*") << std::endl;
-#endif
 	}
 	void makeTGA(const char* name, const Grid& grid, bool preProcess=false)
 	{
@@ -567,6 +567,10 @@ namespace {
 		unsigned int mask = preProcess ? 0xffff :  0xffff0000;
 		makeTGA2(name, grid, mask);
 	}
+#else
+	void makeTGA2(const char* name, const Grid& grid, unsigned int mask) { }
+	void makeTGA(const char* name, const Grid& grid, bool preProcess=false) { }
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -2628,6 +2632,7 @@ std::vector<std::vector<int>> readGridFromFile(const std::string& filename)
     return grid;
 }
 
+#ifndef NO_DEBUG
 void debugZoneEdges(int pass, const AbstractLevel& ablv, const Graph& graph)
 {
 	std::cerr << "## ZONE EDGES DETAILED DUMP" << std::endl;
@@ -2693,6 +2698,7 @@ void debugZoneEdges(int pass, const AbstractLevel& ablv, const Graph& graph)
 		std::cerr << "---" << std::endl;
 	}
 }
+#endif
 
 } // namespace
 

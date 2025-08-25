@@ -18,14 +18,17 @@
 #include "GridToGraph.hpp"
 
 namespace FlowField {
+#ifdef NO_DEBUG
+void debugFlow(int lev, int curZone, int adjacentZone, SubGrid subGrid) { }
+#else
+void debugFlow(int lev, int curZone, int adjacentZone, SubGrid subGrid);
+#endif
 
 // Maximum cost (our cost type is uint8_t, so 255 is max).
 constexpr uint8_t MAX_COST = 255;
 // Given uniform cost, each step costs 1.
 constexpr uint8_t STEP_COST = 1;
 
-
-void debugFlow(int lev, int curZone, int adjacentZone, SubGrid subGrid);
 
 // Extract a subgrid for the target zone.
 // zoneGrid: global vector of vector of GridPointInfo (size = rows x cols)
@@ -246,6 +249,7 @@ void generateFlowGrids(GridToGraph::Graph& graph)
 	}
 }
 
+#ifndef NO_DEBUG
 void debugFlow(int lev, int curZone, int adjacentZone, SubGrid subGrid)
 {
 	std::ostringstream oss;
@@ -266,6 +270,7 @@ void debugFlow(int lev, int curZone, int adjacentZone, SubGrid subGrid)
 		outFile << std::endl;
     }
 }
+#endif
 
 }
 
