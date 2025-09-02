@@ -34,20 +34,32 @@ int main(int argc, char** argv)
 	ctx->type = -1;
 	int count = 1000;
 	int mv = 1;
+	bool reached_target = false;
+	GridType::Point toPnt = { to.x / (info.mCellWidth * 8), to.y / (info.mCellHeight * 8) };
+	GridType::Point prevPnt = toPnt;
 	do {
 		GridType::Point fromPnt = { from.x / (info.mCellWidth * 8), from.y / (info.mCellHeight * 8) };
+		reached_target = (fromPnt.first == toPnt.first && fromPnt.second == toPnt.second);
+		if (prevPnt != fromPnt) {
+			if (pathGrid[fromPnt.second][fromPnt.first] == 'x') {
+				std::cerr << "ERROR: LOOPED BACK TO " << fromPnt.first <<","<< fromPnt.second << std::endl;
+				break;
+			}
+		}
+		prevPnt = fromPnt;
 		pathGrid[fromPnt.second][fromPnt.first] = 'x';
+		std::cerr << "MOVEFROM: " << fromPnt.first <<","<< fromPnt.second << std::endl;
+
 		float ang = Router::getAngle(graph, info, ctx, from, to, 0);
 		std::pair<float, float> mv = computeDirection(ang);
 		from.x += mv.first * 23;
 		from.y += mv.second * 23;
+		GridType::Point nw = { from.x / (info.mCellWidth * 8), from.y / (info.mCellHeight * 8) };
 		std::cerr << "CTV MV " << mv.first << "," << mv.second
-			<< "  ang " << ang<< " cell: " << fromPnt.first << "," << fromPnt.second << std::endl;
-	} while ((ctx->from != ctx->to) && (--count > 0));
-	std::cerr << "COUNT = " << count << std::endl;
-	if (count > 0) {
-		std::cerr << "##PATH FOUND##" << std::endl;
-	}
+			<< "  ang " << ang<< " cell: " << fromPnt.first << "," << fromPnt.second
+			<< " -> " << nw.first << "," <<  nw.second << std::endl;
+		
+	} while (!reached_target && (--count > 0));
 
 	delete ctx;
 
@@ -68,6 +80,14 @@ int main(int argc, char** argv)
 		std::cerr << std::endl;
 	}
 
-	return 1;
+	if (reached_target) {
+		std::cerr << "OK: PATH FOUND" << std::endl;
+	}
+	else {
+		std::cerr << "ERROR: NO PATH" << std::endl;
+	}
+
+
+	return reached_target ? 0: 1;
 }
 
