@@ -20,7 +20,9 @@ namespace FlowField {
 	constexpr uint8_t SINK_BIT = 0x80;
 
 	struct SubGrid {
-		std::vector<int> grid;  // Flat grid array to be used as the input for generateFlowFieldDial.
+        // Flat grid array to be used as the input for generateFlowFieldDial
+        // 0 = walkable, WALL = wall or not part of subgrid of zonegrid
+		std::vector<int> grid;
 		// List for { adjacent zone, flow field} pairs
 		std::vector<std::pair<int, std::vector<uint16_t>> > costFlowFields;
 

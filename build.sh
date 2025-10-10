@@ -1,7 +1,7 @@
 #!/bin/bash
+#-D NO_DEBUG \
 cp test/GRID.txt .
 g++ -o testMain \
--D NO_DEBUG \
 -I test \
 -I src/ \
 -I lib/Util \

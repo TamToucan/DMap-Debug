@@ -47,6 +47,10 @@ int main(int argc, char** argv)
 			}
 		}
 		prevPnt = fromPnt;
+		if (pathGrid[fromPnt.second][fromPnt.first] == 0) {
+			std::cerr << "ERROR: WALL " << fromPnt.first <<","<< fromPnt.second << std::endl;
+			break;
+		}
 		pathGrid[fromPnt.second][fromPnt.first] = 'x';
 		std::cerr << "MOVEFROM: " << fromPnt.first <<","<< fromPnt.second << std::endl;
 
@@ -60,7 +64,6 @@ int main(int argc, char** argv)
 			<< " -> " << nw.first << "," <<  nw.second << std::endl;
 		
 	} while (!reached_target && (--count > 0));
-
 	delete ctx;
 
 	for (int row = 0; row < pathGrid.size(); ++row) {
